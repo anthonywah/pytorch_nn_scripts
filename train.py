@@ -2,8 +2,18 @@ import sys
 import timeit
 
 
-# Train
+# Train, to be updated
 def train(device, model, epochs, optimizer, loss_function, train_loader):
+    """
+
+    :param device:
+    :param model:
+    :param epochs:
+    :param optimizer:
+    :param loss_function:
+    :param train_loader:
+    :return:
+    """
     loss = None
     timer = timeit.default_timer
     start_all = timer()

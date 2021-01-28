@@ -2,22 +2,20 @@ import torch
 
 
 # to be modified
-def predict(device, model, test_loader):
+def predict(model, input_data):
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+    # Put model into evaluation mode
     model.eval()
-    total = 0
-    correct = 0
 
-    with torch.no_grad():
-        for data in test_loader:
-            inputs = data[0].to(device)
-            labels = data[1].to(device)
+    # Convert input_data to numpy array then to Tensor
+    data = torch.from_numpy(input_data)
+    data = data.to(device)
 
-            outputs = model(inputs.view(inputs.shape[0], -1))
-            _, predicted = torch.max(outputs.data, 1)
+    # Predict
+    out = model(data)
+    result = out.cpu().detach().numpy()
 
-            total += labels.size(0)
-            correct += (predicted == labels).sum().item()
-
-    print('Accurecy:', correct / total)
-    return
+    print('Prediction finished')
+    return result
 
