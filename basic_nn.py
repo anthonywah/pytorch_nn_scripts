@@ -5,7 +5,7 @@ import torch.nn.functional as nf
 # Model
 class BasicNeuralNetwork(nn.Module):
     def __init__(self, input_dim=5, hidden_dim=10, output_dim=1):
-        """ Basic structure of a 1-layer neural network
+        """ Basic structure of a 1-layer neural network of a sigmoid output
 
         :param input_dim: Input number of features
         :param hidden_dim: Hidden layer number of features
