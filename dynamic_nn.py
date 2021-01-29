@@ -6,7 +6,7 @@ class DynamicNet(nn.Module):
         """ Defines layers of a neural network.
 
         :param input_dim: Number of input features
-        :param hidden_dim_list: List of hidden layer dimensions
+        :param hidden_dim_list: List of hidden layer dimensions, "3_4_4"
         :param output_dim: Number of output
         """
         assert len(hidden_dim_list) > 0 and all([isinstance(i, int) for i in hidden_dim_list])
