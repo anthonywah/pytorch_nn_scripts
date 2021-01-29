@@ -4,15 +4,14 @@ import timeit
 
 # Train, to be updated
 def train(device, model, epochs, optimizer, loss_function, train_loader):
-    """
+    """ Train the model with the given parameters
 
-    :param device:
-    :param model:
-    :param epochs:
-    :param optimizer:
-    :param loss_function:
-    :param train_loader:
-    :return:
+    :param device: Where the model and data should be loaded (gpu or cpu).
+    :param model: The PyTorch model that we wish to train.
+    :param epochs: The total number of epochs to train for.
+    :param optimizer: The optimizer to use during training.
+    :param loss_function: The loss function used for training.
+    :param train_loader: The PyTorch DataLoader that should be used during training.
     """
     loss = None
     timer = timeit.default_timer
@@ -41,4 +40,4 @@ def train(device, model, epochs, optimizer, loss_function, train_loader):
                                  f'{times}/{len(train_loader)}')
         print(f'\nDone {epoch:>5} / {epochs:>4} | loss = {loss.item():.8} | used {timer() - start_epoch:.4}s')
     print(f'Finished training; used {timer() - start_all}s')
-    return model
+    return
