@@ -1,5 +1,6 @@
 import sys
 import timeit
+from helper_functions import *
 
 
 # Train, to be updated
@@ -14,6 +15,7 @@ def train(device, model, epochs, optimizer, loss_function, train_loader):
     :param train_loader: The PyTorch DataLoader that should be used during training.
     """
     loss = None
+    epoch_loss_list = []
     timer = timeit.default_timer
     start_all = timer()
     for epoch in range(1, epochs+1):
@@ -28,6 +30,7 @@ def train(device, model, epochs, optimizer, loss_function, train_loader):
 
             # Forward and backward propagation
             outputs = model(inputs.view(inputs.shape[0], -1))
+            labels = labels.view(labels.shape[0], -1)
             loss = loss_function(outputs, labels)
             loss.backward()
             optimizer.step()
@@ -35,12 +38,14 @@ def train(device, model, epochs, optimizer, loss_function, train_loader):
 
             # Show progress
             if times % 5 == 0 or times == len(train_loader):
-                pct_ind = int((1 + times) * 50 / len(train_loader))
+                pct_ind = int((1 + times) * 100 / len(train_loader))
                 sys.stdout.write('\r')
                 sys.stdout.write(f'{epoch}/{epochs} | '
-                                 f'[{"=" * pct_ind}{"-" * (50 - pct_ind)}] {pct_ind * 2:>3}% | '
+                                 f'[{"=" * pct_ind}{"-" * (100 - pct_ind)}] {pct_ind:>3}% | '
                                  f'{times}/{len(train_loader)}')
-        print(f'\nDone {epoch:>5} / {epochs:>4} | loss = {total_loss / len(train_loader):.3f} | '
-              f'used {timer() - start_epoch:.4}s')
+        print('')
+        log_info(f'Done {epoch:>5} / {epochs:>4} | loss = {total_loss / len(train_loader):.10f} | '
+                 f'used {timer() - start_epoch:.4}s')
+        epoch_loss_list.append([epoch, loss])
     print(f'Finished training; used {timer() - start_all}s')
-    return
+    return epoch_loss_list

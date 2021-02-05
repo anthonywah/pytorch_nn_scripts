@@ -1,5 +1,7 @@
+import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from helper_functions import *
 
 
 class DynamicNet(nn.Module):
@@ -7,9 +9,9 @@ class DynamicNet(nn.Module):
         """ Defines layers of a neural network.
 
         :param input_dim: Number of input features
-        :param hidden_dim_list: List of hidden layer dimensions, "3_4_4"
+        :param hidden_dim_list: List of hidden layer dimensions, [3, 4, 4]
         :param output_dim: Number of output
-        :param output_type: 'number' or 'binary'
+        :param output_type: 'continuous' or 'binary'
         """
         assert len(hidden_dim_list) > 0 and all([isinstance(i, int) for i in hidden_dim_list])
         super(DynamicNet, self).__init__()
@@ -24,6 +26,7 @@ class DynamicNet(nn.Module):
         self.dropout = nn.Dropout(0.15)
         self.sig = nn.Sigmoid()
         self.log_softmax = nn.LogSoftmax(dim=1)
+        log_info('DynamicNet created')
 
     def forward(self, x):
         """ Feedforward behavior of the net
@@ -35,8 +38,11 @@ class DynamicNet(nn.Module):
             fc = getattr(self, self.fc_dict[i + 1])
             x = fc(x)
             if i + 1 != len(self.fc_dict):
-                x = F.relu(x)  # activation on hidden layers
+                if self.output_type == 'binary':
+                    x = F.relu(x)  # activation on hidden layers
+                else:
+                    x = torch.tanh(x)
                 x = self.dropout(x)
         if self.output_type == 'binary':
             x = self.sig(x)  # Sigmoid function on output if output type is a binary label
-        return x   # self.sig(x), self.log_softmax(x)
+        return x
